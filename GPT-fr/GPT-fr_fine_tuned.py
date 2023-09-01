@@ -33,5 +33,4 @@ trainer = Trainer(
     eval_dataset=valid_dataset,
 )
 
-trainer.save_model('./my_model')
-trainer.save_model('./my_model')
+trainer.save_model('./fine_tuned_model')
