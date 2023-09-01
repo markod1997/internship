@@ -3,7 +3,7 @@ import re
 
 # Function to annotate entities in generated texts
 def annotate_entities(people_csv, countries_csv, organizations_csv, generated_texts_csv, output_file):
-    # Load people's names from the people.csv file
+    # Load people's names from the People_spreadsheet.csv file
     with open(people_csv, 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         people_names = set()
@@ -12,7 +12,7 @@ def annotate_entities(people_csv, countries_csv, organizations_csv, generated_te
             last_name = row['last_name']
             people_names.add((first_name, last_name))
 
-    # Load country names from the Places_list.csv file
+    # Load country names from the Places_spreadsheet.csv file
     with open(countries_csv, 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         place_names = set()
@@ -20,7 +20,7 @@ def annotate_entities(people_csv, countries_csv, organizations_csv, generated_te
             place_name = row['0']
             place_names.add(place_name)
 
-    # Load organization names from Organizations_list.csv file
+    # Load organization names from Organizations_spreadsheet.csv file
     with open(organizations_csv, 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         organization_names = set()
@@ -28,7 +28,7 @@ def annotate_entities(people_csv, countries_csv, organizations_csv, generated_te
             organization_name = row['0']
             organization_names.add(organization_name)
 
-    # Process the Generated_texts.csv file and annotate names, countries, and organizations
+    # Process the Generated_texts.csv file and annotate names, places, and organizations
     with open(generated_texts_csv, 'r') as textfile:
         texts = textfile.readlines()
 
@@ -39,7 +39,7 @@ def annotate_entities(people_csv, countries_csv, organizations_csv, generated_te
             pattern = re.compile(fr"\b({re.escape(first_name)}\s{re.escape(last_name)}|{re.escape(last_name)}\s{re.escape(first_name)})\b", re.IGNORECASE)
             text = re.sub(pattern, r'<PERSON>\g<0></PERSON>', text)
 
-        # Annotate place names
+        # Annotate toponyms
         for place_name in place_names:
             pattern = re.compile(fr"\b{re.escape(place_name)}\b")
             matches = pattern.finditer(text)
@@ -66,5 +66,5 @@ def annotate_entities(people_csv, countries_csv, organizations_csv, generated_te
         outfile.writelines(annotated_texts)
 
 # Call the annotate_entities function with the provided CSV files
-annotate_entities('People_list.csv', 'Places_list.csv', 'Organizations_list.csv', 'Generated_texts.csv', 'Annotated_texts.csv')
+annotate_entities('People_spreadsheet.csv', 'Places_spreadsheet.csv', 'Organizations_spreadsheet.csv', 'Generated_texts.csv', 'Annotated_texts.csv')
 
